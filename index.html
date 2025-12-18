@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wedding day</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f9f7f4; 
+            --accent: #8e7d71;  
+            --text-main: #444;
+            --text-sub: #888;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f0f0; color: var(--text-main); overflow-x: hidden; }
+        .wrapper { max-width: 450px; margin: 0 auto; background: var(--bg-color); min-height: 100vh; }
+        section { padding: 70px 30px; text-align: center; }
+        .myeongjo { font-family: 'Nanum Myeongjo', serif; }
+        .weddingday-text { color: #555; font-family: 'Courier New', Courier, monospace; margin-bottom: 30px; margin-top:10px;}
+        /* 인트로 커버 */
+        #cover {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff; z-index: 1000; transition: 0.8s; cursor: pointer;
+        }
+        #cover img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.9); }
+        .cover-content {
+            position: absolute; bottom: 15%; left: 0; width: 100%;
+            text-align: center; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        /* 인사말 이미지 */
+        /* 인사말 이미지 수정: 좌우 여백을 무시하고 꽉 채움 */
+        .greeting-img { 
+            width: calc(100% + 60px); /* 부모 section의 padding 30px * 2만큼 더 넓게 설정 */
+            margin-left: -30px;       /* 왼쪽으로 30px 당겨서 여백 제거 */
+            height: auto; 
+            border-radius: 0;         /* 라운드 제거 */
+            margin-bottom: 40px; 
+            display: block;           /* 하단 미세 공백 제거 */
+        }
+        .greeting-text { font-size: 0.95rem; line-height: 2.4; color: #555; word-break: keep-all; }
+
+        /* 연락처 버튼 */
+        .btn-contact {
+            background: none; border: 1px solid var(--accent); color: var(--accent);
+            padding: 12px 35px; border-radius: 2px; cursor: pointer; margin-top: 25px;
+            font-size: 0.85rem;
+        }
+
+        /* 갤러리 */
+        .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 180px; gap: 12px; }
+        .gallery-grid img { width: 100%; height: 100%; object-fit: cover; border-radius: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .gallery-grid img:nth-child(4n+1) { grid-row: span 2; }
+
+        /* 마음 전하실 곳 카드 */
+        .account-card {
+            background: white; padding: 20px; margin-bottom: 12px;
+            text-align: left; position: relative; border-radius: 10px;
+            border: 1px solid #eee;
+        }
+        .acc-info { font-size: 0.9rem; margin-bottom: 5px; }
+        .btn-copy {
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+            background: #fdfdfd; border: 1px solid #e0e0e0; padding: 7px 12px;
+            font-size: 0.7rem; color: #777; cursor: pointer; border-radius: 5px;
+        }
+
+        /* 토스트 알림 */
+        #toast {
+            visibility: hidden; min-width: 200px; background: rgba(0,0,0,0.75);
+            color: #fff; text-align: center; border-radius: 30px; padding: 12px;
+            position: fixed; left: 50%; bottom: 40px; transform: translateX(-50%);
+            font-size: 0.8rem; z-index: 3000;
+        }
+        #toast.show { visibility: visible; animation: fadeInUp 0.5s, fadeOut 0.5s 2s; }
+
+        @keyframes fadeInUp { from { bottom: 20px; opacity: 0; } to { bottom: 40px; opacity: 1; } }
+        @keyframes fadeOut { from { bottom: 40px; opacity: 1; } to { bottom: 20px; opacity: 0; } }
+
+        .fade-in { opacity: 0; transform: translateY(20px); transition: 1s ease-out; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* 모달 스타일 수정 */
+        .modal {
+            display: none; position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center;
+        }
+        .modal-content { background: white; width: 90%; max-width: 400px; padding: 25px; border-radius: 15px; }
+        .contact-group { margin-bottom: 20px; }
+        .contact-group h4 { font-size: 0.8rem; color: var(--accent); margin-bottom: 10px; border-bottom: 1px solid #f0f0f0; padding-bottom: 5px; text-align: left; }
+        .contact-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f9f9f9; }
+        .contact-name { font-size: 0.95rem; }
+        .contact-actions { display: flex; gap: 15px; }
+        .contact-actions a { text-decoration: none; font-size: 1.2rem; display: flex; align-items: center; }
+    </style>
+</head>
+<body>
+
+    <div id="toast">계좌번호가 복사되었습니다.</div>
+
+    <div id="cover" onclick="closeCover()">
+        <img src="img/main.jpeg" alt="Main Photo">
+        <div class="cover-content">
+            <h2 class="myeongjo" style="font-weight: 400; font-size: 1.5rem; letter-spacing: 2px;">안녕하세요</h2>
+            <div style="width: 20px; height: 1px; background: white; margin: 20px auto;"></div>
+            <p class="myeongjo">김희태 & 조희연</p>
+            <p style="font-size: 0.8rem; margin-top: 10px;">2026년 10월 15일 목요일 낮 12시</p>
+        </div>
+    </div>
+
+    <div class="wrapper">
+        <section class="fade-in">
+            <div class="weddingday-text"> wedding day </div>
+            <img src="img/sub.jpeg" class="greeting-img" alt="Sub Photo">
+            <div style="font-family:'Courier New', Courier, monospace; font-size: 1.3rem; margin-bottom: 30px; color: black">2026.10.15</div>
+            
+            <div class="greeting-text myeongjo" style="margin-bottom: 30px;">
+                서로의 뜻을 모아 가족들과 함께<br>조용히 예식을 올리게 되었습니다. 
+                <br><br>
+                직접 초대드리지 못함을 너그럽게 이해해 주시고,<br>
+                앞으로 함께 걸어갈 저희의 시작을<br>
+                따뜻한 마음으로 지켜봐 주시면 감사하겠습니다.<br>
+            </div>
+            
+            <div style="width: 20px; height: 1px; background: black; margin: 20px auto;"></div>
+            <div class="myeongjo" style="font-size: 1rem; line-height: 2; margin-bottom: 30px; margin-top:30px">
+                
+                OOO · OOO <span style="font-size: 0.8rem; color: #999;">의 아들</span> <b>OOO</b><br>
+                OOO · OOO <span style="font-size: 0.8rem; color: #999;">의 딸</span> <b>OOO</b>
+            </div>
+
+            <button class="btn-contact" onclick="openModal()">연락하기</button>
+        </section>
+
+        <section class="fade-in" style="background: #f4f1ee;">
+            <h2 class="myeongjo" style="margin-bottom: 30px; font-size: 1.2rem;">우리의 순간들</h2>
+            <div class="gallery-grid" id="gallery-container"></div>
+        </section>
+
+        <section class="fade-in" style="display: none;">
+            <h2 class="myeongjo" style="margin-bottom: 30px; font-size: 1.2rem;">마음 전하실 곳</h2>
+            <div class="account-card">
+                <div class="acc-info"><b>신랑 OOO</b></div>
+                <div class="acc-info" style="color: #777;">은행명 123-456-789012</div>
+                <button class="btn-copy" onclick="copyText('은행명 123-456-789012')">복사하기</button>
+            </div>
+            <div class="account-card">
+                <div class="acc-info"><b>신부 OOO</b></div>
+                <div class="acc-info" style="color: #777;">은행명 123-456-789012</div>
+                <button class="btn-copy" onclick="copyText('은행명 123-456-789012')">복사하기</button>
+            </div>
+        </section>
+
+        <section class="fade-in" style="padding-top: 100px;">
+            <div class="greeting-text myeongjo" style="font-size: 0.9rem;">
+                저희의 시작을 가장 가까이서 축복해 주셔서 감사합니다.<br><br>
+                가족이라는 이름으로 하나 되는 오늘,<br>
+                이 따뜻한 마음을 평생 소중히 간직하며 살겠습니다.
+            </div>
+            <p class="myeongjo" style="margin-top: 50px; font-size: 1.1rem; color: var(--accent);">희태 · 희연 드림</p>
+        </section>
+
+        <!-- <footer style="padding-bottom: 50px; text-align: center; color: #ccc; font-size: 0.7rem;">
+            © 2025 Private Wedding
+        </footer> -->
+    </div>
+
+    <div id="contactModal" class="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3 class="myeongjo" style="margin-bottom: 25px; text-align: center; font-weight: normal;">연락하기</h3>
+            
+            <div class="contact-group">
+                <h4>신랑측</h4>
+                <div class="contact-item">
+                    <span class="contact-name">신랑 <b>OOO</b></span>
+                    <div class="contact-actions">
+                        <a href="tel:01012345678" title="전화">📞</a>
+                        <a href="sms:01012345678" title="문자">💬</a>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-name">아버지 OOO</span>
+                    <div class="contact-actions">
+                        <a href="tel:01012345678">📞</a>
+                        <a href="sms:01012345678">💬</a>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-name">어머니 OOO</span>
+                    <div class="contact-actions">
+                        <a href="tel:01012345678">📞</a>
+                        <a href="sms:01012345678">💬</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-group">
+                <h4>신부측</h4>
+                <div class="contact-item">
+                    <span class="contact-name">신부 <b>OOO</b></span>
+                    <div class="contact-actions">
+                        <a href="tel:01012345678">📞</a>
+                        <a href="sms:01012345678">💬</a>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-name">아버지 OOO</span>
+                    <div class="contact-actions">
+                        <a href="tel:01012345678">📞</a>
+                        <a href="sms:01012345678">💬</a>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-name">어머니 OOO</span>
+                    <div class="contact-actions">
+                        <a href="tel:01012345678">📞</a>
+                        <a href="sms:01012345678">💬</a>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="closeModal()" style="width: 100%; border: none; background: #f0f0f0; padding: 12px; margin-top: 10px; border-radius: 8px; color: #666; font-size: 0.9rem;">닫기</button>
+        </div>
+    </div>
+
+    <script>
+        // 커버 닫기
+        function closeCover() {
+            const cover = document.getElementById('cover');
+            cover.style.opacity = '0';
+            setTimeout(() => cover.style.display = 'none', 800);
+        }
+        setTimeout(closeCover, 5000);
+
+        // 갤러리 이미지 생성
+        const container = document.getElementById('gallery-container');
+        for(let i=1; i<=56; i++) {
+            const img = document.createElement('img');
+            img.src = `img/img${i}.jpeg`;
+            container.appendChild(img);
+        }
+
+        // 모달 제어
+        function openModal() { document.getElementById('contactModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('contactModal').style.display = 'none'; }
+
+        // 계좌 복사
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById("toast");
+                toast.classList.add("show");
+                setTimeout(() => toast.classList.remove("show"), 2500);
+            });
+        }
+
+        // 스크롤 애니메이션
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
