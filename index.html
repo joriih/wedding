@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>wedding day</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <meta property="og:title" content="김희태 & 조희연 결혼식에 초대합니다">
+    <meta property="og:description" content="2026.10.15 목요일 낮 12시">
+    <meta property="og:image" content="https://your-domain.com/img/main.jpeg"> <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js" integrity="sha384-lLeY8Aun3C9zU2052NspuTj7u6CAnzZ9vCqO0Y5KqG8bM/N03v9M7H37u0N9e7i" crossorigin="anonymous"></script>
+
     <style>
         :root {
             --bg-color: #f9f7f4; 
@@ -19,7 +25,7 @@
         section { padding: 70px 30px; text-align: center; }
         .myeongjo { font-family: 'Nanum Myeongjo', serif; }
         .weddingday-text { color: #555; font-family: 'Courier New', Courier, monospace; margin-bottom: 30px; margin-top:10px;}
-        /* 인트로 커버 */
+        
         #cover {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #fff; z-index: 1000; transition: 0.8s; cursor: pointer;
@@ -30,31 +36,31 @@
             text-align: center; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
-        /* 인사말 이미지 */
-        /* 인사말 이미지 수정: 좌우 여백을 무시하고 꽉 채움 */
         .greeting-img { 
-            width: calc(100% + 60px); /* 부모 section의 padding 30px * 2만큼 더 넓게 설정 */
-            margin-left: -30px;       /* 왼쪽으로 30px 당겨서 여백 제거 */
+            width: calc(100% + 60px); 
+            margin-left: -30px;       
             height: auto; 
-            border-radius: 0;         /* 라운드 제거 */
+            border-radius: 0;         
             margin-bottom: 40px; 
-            display: block;           /* 하단 미세 공백 제거 */
+            display: block;           
         }
         .greeting-text { font-size: 0.95rem; line-height: 2.4; color: #555; word-break: keep-all; }
 
-        /* 연락처 버튼 */
         .btn-contact {
             background: none; border: 1px solid var(--accent); color: var(--accent);
-            padding: 12px 35px; border-radius: 2px; cursor: pointer; margin-top: 25px;
-            font-size: 0.85rem;
+            padding: 12px 25px; border-radius: 2px; cursor: pointer; margin-top: 25px;
+            font-size: 0.85rem; transition: 0.3s;
+        }
+        .btn-kakao {
+            background: #FEE500; border: none; color: #3c1e1e;
+            padding: 12px 25px; border-radius: 2px; cursor: pointer; margin-top: 25px;
+            font-size: 0.85rem; margin-left: 8px;
         }
 
-        /* 갤러리 */
         .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 180px; gap: 12px; }
         .gallery-grid img { width: 100%; height: 100%; object-fit: cover; border-radius: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
         .gallery-grid img:nth-child(4n+1) { grid-row: span 2; }
 
-        /* 마음 전하실 곳 카드 */
         .account-card {
             background: white; padding: 20px; margin-bottom: 12px;
             text-align: left; position: relative; border-radius: 10px;
@@ -67,7 +73,6 @@
             font-size: 0.7rem; color: #777; cursor: pointer; border-radius: 5px;
         }
 
-        /* 토스트 알림 */
         #toast {
             visibility: hidden; min-width: 200px; background: rgba(0,0,0,0.75);
             color: #fff; text-align: center; border-radius: 30px; padding: 12px;
@@ -82,7 +87,6 @@
         .fade-in { opacity: 0; transform: translateY(20px); transition: 1s ease-out; }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
 
-        /* 모달 스타일 수정 */
         .modal {
             display: none; position: fixed; top:0; left:0; width:100%; height:100%;
             background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center;
@@ -126,12 +130,12 @@
             
             <div style="width: 20px; height: 1px; background: black; margin: 20px auto;"></div>
             <div class="myeongjo" style="font-size: 1rem; line-height: 2; margin-bottom: 30px; margin-top:30px">
-                
                 OOO · OOO <span style="font-size: 0.8rem; color: #999;">의 아들</span> <b>김희태</b><br>
                 OOO · OOO <span style="font-size: 0.8rem; color: #999;">의 딸</span> <b>조희연</b>
             </div>
 
             <button class="btn-contact" onclick="openModal()">연락하기</button>
+            <button class="btn-kakao" onclick="shareKakao()">카톡 공유</button>
         </section>
 
         <section class="fade-in" style="background: #f4f1ee;">
@@ -142,12 +146,12 @@
         <section class="fade-in" >
             <h2 class="myeongjo" style="margin-bottom: 30px; font-size: 1.2rem;">마음 전하실 곳</h2>
             <div class="account-card">
-                <div class="acc-info"><b>신랑 OOO</b></div>
+                <div class="acc-info"><b>신랑 김희태</b></div>
                 <div class="acc-info" style="color: #777;">은행명 123-456-789012</div>
                 <button class="btn-copy" onclick="copyText('은행명 123-456-789012')">복사하기</button>
             </div>
             <div class="account-card">
-                <div class="acc-info"><b>신부 OOO</b></div>
+                <div class="acc-info"><b>신부 조희연</b></div>
                 <div class="acc-info" style="color: #777;">은행명 123-456-789012</div>
                 <button class="btn-copy" onclick="copyText('은행명 123-456-789012')">복사하기</button>
             </div>
@@ -161,72 +165,64 @@
             </div>
             <p class="myeongjo" style="margin-top: 50px; font-size: 1.1rem; color: var(--accent);">희태 · 희연 드림</p>
         </section>
-
-        <!-- <footer style="padding-bottom: 50px; text-align: center; color: #ccc; font-size: 0.7rem;">
-            © 2025 Private Wedding
-        </footer> -->
     </div>
 
     <div id="contactModal" class="modal" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <h3 class="myeongjo" style="margin-bottom: 25px; text-align: center; font-weight: normal;">연락하기</h3>
-            
             <div class="contact-group">
                 <h4>신랑측</h4>
                 <div class="contact-item">
-                    <span class="contact-name">신랑 <b>OOO</b></span>
-                    <div class="contact-actions">
-                        <a href="tel:01012345678" title="전화">📞</a>
-                        <a href="sms:01012345678" title="문자">💬</a>
-                    </div>
-                </div>
-                <div class="contact-item">
-                    <span class="contact-name">아버지 OOO</span>
-                    <div class="contact-actions">
-                        <a href="tel:01012345678">📞</a>
-                        <a href="sms:01012345678">💬</a>
-                    </div>
-                </div>
-                <div class="contact-item">
-                    <span class="contact-name">어머니 OOO</span>
+                    <span class="contact-name">신랑 <b>김희태</b></span>
                     <div class="contact-actions">
                         <a href="tel:01012345678">📞</a>
                         <a href="sms:01012345678">💬</a>
                     </div>
                 </div>
             </div>
-
             <div class="contact-group">
                 <h4>신부측</h4>
                 <div class="contact-item">
-                    <span class="contact-name">신부 <b>OOO</b></span>
-                    <div class="contact-actions">
-                        <a href="tel:01012345678">📞</a>
-                        <a href="sms:01012345678">💬</a>
-                    </div>
-                </div>
-                <div class="contact-item">
-                    <span class="contact-name">아버지 OOO</span>
-                    <div class="contact-actions">
-                        <a href="tel:01012345678">📞</a>
-                        <a href="sms:01012345678">💬</a>
-                    </div>
-                </div>
-                <div class="contact-item">
-                    <span class="contact-name">어머니 OOO</span>
+                    <span class="contact-name">신부 <b>조희연</b></span>
                     <div class="contact-actions">
                         <a href="tel:01012345678">📞</a>
                         <a href="sms:01012345678">💬</a>
                     </div>
                 </div>
             </div>
-
             <button onclick="closeModal()" style="width: 100%; border: none; background: #f0f0f0; padding: 12px; margin-top: 10px; border-radius: 8px; color: #666; font-size: 0.9rem;">닫기</button>
         </div>
     </div>
 
     <script>
-        // 커버 닫기
+        // 1. 카카오 초기화 (여기에 복사한 키를 넣으세요)
+        Kakao.init('0b3ba9d886b5c88bacf18f4664063603'); 
+
+        // 2. 카카오톡 공유 함수
+        function shareKakao() {
+            Kakao.Share.sendDefault({
+                objectType: 'feed',
+                content: {
+                    title: '김희태 & 조희연 결혼식에 초대합니다',
+                    description: '2026년 10월 15일 목요일 낮 12시',
+                    imageUrl: 'https://joriih.github.io/wedding/img/sub.jpeg', // 실제 메인 사진 주소
+                    link: {
+                        mobileWebUrl: window.location.href,
+                        webUrl: window.location.href,
+                    },
+                },
+                buttons: [
+                    {
+                        title: '청첩장 보기',
+                        link: {
+                            mobileWebUrl: window.location.href,
+                            webUrl: window.location.href,
+                        },
+                    },
+                ],
+            });
+        }
+
         function closeCover() {
             const cover = document.getElementById('cover');
             cover.style.opacity = '0';
@@ -234,7 +230,6 @@
         }
         setTimeout(closeCover, 5000);
 
-        // 갤러리 이미지 생성
         const container = document.getElementById('gallery-container');
         for(let i=1; i<=11; i++) {
             const img = document.createElement('img');
@@ -242,11 +237,9 @@
             container.appendChild(img);
         }
 
-        // 모달 제어
         function openModal() { document.getElementById('contactModal').style.display = 'flex'; }
         function closeModal() { document.getElementById('contactModal').style.display = 'none'; }
 
-        // 계좌 복사
         function copyText(text) {
             navigator.clipboard.writeText(text).then(() => {
                 const toast = document.getElementById("toast");
@@ -255,7 +248,6 @@
             });
         }
 
-        // 스크롤 애니메이션
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
         }, { threshold: 0.1 });
