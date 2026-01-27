@@ -21,6 +21,7 @@
             --accent: #8e7d71;  
             --text-main: #444;
             --text-sub: #888;
+            --player-accent: #8e7d71;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -30,78 +31,94 @@
         .myeongjo { font-family: 'Nanum Myeongjo', serif; }
         .weddingday-text { color: #555; font-family: 'Courier New', Courier, monospace; margin-bottom: 30px; margin-top:10px;}
         
-        #cover {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #fff; z-index: 1000; transition: 0.8s; cursor: pointer;
+        /* --- 음악 플레이어 UI --- */
+        .music-player-section {
+            background-color: var(--bg-color);
+            padding: 20px 30px 40px 30px;
+            color: var(--text-main);
         }
+        .video-container {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: #eee;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+        .video-container video { width: 100%; height: 100%; object-fit: cover; }
+        .player-info { text-align: left; margin-bottom: 10px; }
+        .player-info h3 { font-size: 1.1rem; font-weight: 600; color: #333; margin-bottom: 4px; }
+        .player-info p { font-size: 0.85rem; color: var(--accent); }
+
+        .progress-container { width: 100%; margin-bottom: 25px; }
+        
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]:focus { outline: none; }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px; cursor: pointer; background: #e0e0e0; border-radius: 2px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 14px; width: 14px; border-radius: 50%; background: var(--player-accent);
+            cursor: pointer; -webkit-appearance: none; margin-top: -5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .time-info { display: flex; justify-content: space-between; font-size: 0.7rem; margin-top: 10px; color: #999; }
+
+        .controls { display: flex; justify-content: center; align-items: center; gap: 30px; }
+        .control-btn { background: none; border: none; cursor: pointer; padding: 10px; display: flex; align-items: center; }
+        .control-btn svg { fill: #555; width: 22px; height: 22px; }
+        .play-pause-btn { width: 55px; height: 55px; background: #fff; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.08); justify-content: center; }
+        .play-pause-btn svg { width: 26px; height: 26px; fill: var(--player-accent); }
+
+        /* --- 인스타그램 스타일 가로 스크롤 갤러리 (드래그 지원) --- */
+        .instagram-gallery {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 10px;
+            padding: 0 20px 20px 20px;
+            scrollbar-width: none;
+            cursor: grab; /* 마우스 커서 모양 변경 */
+            user-select: none;
+        }
+        .instagram-gallery:active { cursor: grabbing; }
+        .instagram-gallery::-webkit-scrollbar { display: none; }
+        .gallery-item {
+            flex: 0 0 85%;
+            aspect-ratio: 1 / 1;
+            scroll-snap-align: center;
+            pointer-events: none; /* 드래그 방해 방지 */
+        }
+        .gallery-item img {
+            width: 100%; height: 100%; object-fit: cover; border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            -webkit-user-drag: none;
+        }
+
+        /* 기존 레이아웃 */
+        #cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 1000; transition: 0.8s; cursor: pointer; }
         #cover img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.9); }
-        .cover-content {
-            position: absolute; bottom: 15%; left: 0; width: 100%;
-            text-align: center; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-
-        .greeting-img { 
-            width: calc(100% + 60px); 
-            margin-left: -30px;       
-            height: auto; 
-            border-radius: 0;         
-            margin-bottom: 40px; 
-            display: block;           
-        }
+        .cover-content { position: absolute; bottom: 15%; left: 0; width: 100%; text-align: center; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .greeting-img { width: calc(100% + 60px); margin-left: -30px; height: auto; margin-bottom: 40px; display: block; }
         .greeting-text { font-size: 0.95rem; line-height: 2.4; color: #555; word-break: keep-all; }
-
-        .btn-contact {
-            background: none; border: 1px solid var(--accent); color: var(--accent);
-            padding: 12px 25px; border-radius: 2px; cursor: pointer; margin-top: 25px;
-            font-size: 0.85rem; transition: 0.3s;
-        }
-        .btn-kakao {
-            background: #FEE500; border: none; color: #3c1e1e;
-            padding: 12px 25px; border-radius: 2px; cursor: pointer; margin-top: 25px;
-            font-size: 0.85rem; margin-left: 8px;
-        }
-
-        .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 180px; gap: 12px; }
-        .gallery-grid img { width: 100%; height: 100%; object-fit: cover; border-radius: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-        .gallery-grid img:nth-child(4n+1) { grid-row: span 2; }
-
-        .account-card {
-            background: white; padding: 20px; margin-bottom: 12px;
-            text-align: left; position: relative; border-radius: 10px;
-            border: 1px solid #eee;
-        }
+        .btn-contact { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 12px 25px; border-radius: 2px; cursor: pointer; margin-top: 25px; font-size: 0.85rem; }
+        .btn-kakao { background: #FEE500; border: none; color: #3c1e1e; padding: 12px 25px; border-radius: 2px; cursor: pointer; margin-top: 25px; font-size: 0.85rem; margin-left: 8px; }
+        .account-card { background: white; padding: 20px; margin-bottom: 12px; text-align: left; position: relative; border-radius: 10px; border: 1px solid #eee; }
         .acc-info { font-size: 0.9rem; margin-bottom: 5px; }
-        .btn-copy {
-            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
-            background: #fdfdfd; border: 1px solid #e0e0e0; padding: 7px 12px;
-            font-size: 0.7rem; color: #777; cursor: pointer; border-radius: 5px;
-        }
-
-        #toast {
-            visibility: hidden; min-width: 200px; background: rgba(0,0,0,0.75);
-            color: #fff; text-align: center; border-radius: 30px; padding: 12px;
-            position: fixed; left: 50%; bottom: 40px; transform: translateX(-50%);
-            font-size: 0.8rem; z-index: 3000;
-        }
+        .btn-copy { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: #fdfdfd; border: 1px solid #e0e0e0; padding: 7px 12px; font-size: 0.7rem; color: #777; cursor: pointer; border-radius: 5px; }
+        #toast { visibility: hidden; min-width: 200px; background: rgba(0,0,0,0.75); color: #fff; text-align: center; border-radius: 30px; padding: 12px; position: fixed; left: 50%; bottom: 40px; transform: translateX(-50%); font-size: 0.8rem; z-index: 3000; }
         #toast.show { visibility: visible; animation: fadeInUp 0.5s, fadeOut 0.5s 2s; }
-
         @keyframes fadeInUp { from { bottom: 20px; opacity: 0; } to { bottom: 40px; opacity: 1; } }
         @keyframes fadeOut { from { bottom: 40px; opacity: 1; } to { bottom: 20px; opacity: 0; } }
-
         .fade-in { opacity: 0; transform: translateY(20px); transition: 1s ease-out; }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-        .modal {
-            display: none; position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center;
-        }
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center; }
         .modal-content { background: white; width: 90%; max-width: 400px; padding: 25px; border-radius: 15px; }
-        .contact-group { margin-bottom: 20px; }
-        .contact-group h4 { font-size: 0.8rem; color: var(--accent); margin-bottom: 10px; border-bottom: 1px solid #f0f0f0; padding-bottom: 5px; text-align: left; }
-        .contact-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f9f9f9; }
-        .contact-name { font-size: 0.95rem; }
-        .contact-actions { display: flex; gap: 15px; }
-        .contact-actions a { text-decoration: none; font-size: 1.2rem; display: flex; align-items: center; }
     </style>
 </head>
 <body>
@@ -142,9 +159,46 @@
             <button class="btn-kakao" onclick="shareKakao()">카톡 공유</button>
         </section>
 
-        <section class="fade-in" style="background: #f4f1ee;">
-            <h2 class="myeongjo" style="margin-bottom: 30px; font-size: 1.2rem;">우리의 순간들</h2>
-            <div class="gallery-grid" id="gallery-container"></div>
+        <section class="music-player-section fade-in">
+            <div class="video-container">
+                <video id="playerVideo" muted loop playsinline autoplay>
+                    <source src="video.mp4" type="video/mp4">
+                </video>
+            </div>
+            
+            <div class="player-info">
+                <h3 class="myeongjo" id="songTitle">우리의 시작 (Part 1)</h3>
+                <p>희태 & 희연</p>
+            </div>
+
+            <div class="progress-container">
+                <input type="range" id="progressScrubber" value="0" step="0.1">
+                <div class="time-info">
+                    <span id="currentTime">0:00</span>
+                    <span id="durationTime">0:00</span>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="control-btn" id="prevBtn">
+                    <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+                </button>
+                <button class="control-btn play-pause-btn" id="playBtn">
+                    <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+                <button class="control-btn" id="nextBtn">
+                    <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                </button>
+            </div>
+
+            <audio id="playerAudio">
+                <source src="music1.wav" type="audio/wav">
+            </audio>
+        </section>
+
+        <section class="fade-in" style="background: #f4f1ee; padding-left: 0; padding-right: 0;">
+            <h2 class="myeongjo" style="margin-bottom: 30px; font-size: 1.2rem; padding: 0 30px;">우리의 순간들</h2>
+            <div class="instagram-gallery" id="gallery-container"></div>
         </section>
 
         <section class="fade-in" >
@@ -173,36 +227,130 @@
 
     <div id="contactModal" class="modal" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <h3 class="myeongjo" style="margin-bottom: 25px; text-align: center; font-weight: normal;">연락하기</h3>
+            <h3 class="myeongjo" style="margin-bottom: 25px; text-align: center;">연락하기</h3>
             <div class="contact-group">
-                <h4>신랑측</h4>
-                <div class="contact-item">
-                    <span class="contact-name">신랑 <b>김희태</b></span>
-                    <div class="contact-actions">
-                        <a href="tel:01012345678">📞</a>
-                        <a href="sms:01012345678">💬</a>
-                    </div>
+                <h4 style="font-size:0.8rem; color:var(--accent); margin-bottom:10px; border-bottom:1px solid #eee;">신랑측</h4>
+                <div style="display:flex; justify-content:space-between; padding:10px 0;">
+                    <span>신랑 김희태</span>
+                    <div style="display:flex; gap:15px;"><a href="tel:01012345678">📞</a> <a href="sms:01012345678">💬</a></div>
                 </div>
             </div>
             <div class="contact-group">
-                <h4>신부측</h4>
-                <div class="contact-item">
-                    <span class="contact-name">신부 <b>조희연</b></span>
-                    <div class="contact-actions">
-                        <a href="tel:01012345678">📞</a>
-                        <a href="sms:01012345678">💬</a>
-                    </div>
+                <h4 style="font-size:0.8rem; color:var(--accent); margin-bottom:10px; border-bottom:1px solid #eee; margin-top:20px;">신부측</h4>
+                <div style="display:flex; justify-content:space-between; padding:10px 0;">
+                    <span>신부 조희연</span>
+                    <div style="display:flex; gap:15px;"><a href="tel:01012345678">📞</a> <a href="sms:01012345678">💬</a></div>
                 </div>
             </div>
-            <button onclick="closeModal()" style="width: 100%; border: none; background: #f0f0f0; padding: 12px; margin-top: 10px; border-radius: 8px; color: #666; font-size: 0.9rem;">닫기</button>
+            <button onclick="closeModal()" style="width:100%; border:none; background:#f0f0f0; padding:12px; margin-top:20px; border-radius:8px;">닫기</button>
         </div>
     </div>
 
     <script>
-        // 1. 카카오 초기화
-        Kakao.init('0b3ba9d886b5c88bacf18f4664063603'); 
+        // --- 음악 플레이어 로직 ---
+        const audio = document.getElementById('playerAudio');
+        const video = document.getElementById('playerVideo');
+        const playBtn = document.getElementById('playBtn');
+        const playIcon = document.getElementById('playIcon');
+        const scrubber = document.getElementById('progressScrubber');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationTimeEl = document.getElementById('durationTime');
+        const songTitle = document.getElementById('songTitle');
 
-        // 2. 카카오톡 공유 함수 [수정됨]
+        const playlist = [
+            { src: 'music1.wav', title: '우리의 시작 (Part 1)' },
+            { src: 'music2.wav', title: '설레는 발걸음 (Part 2)' },
+            { src: 'music3.wav', title: '영원한 약속 (Part 3)' }
+        ];
+        let currentIdx = 0;
+
+        const playPath = "M8 5v14l11-7z";
+        const pausePath = "M6 19h4V5H6v14zm8-14v14h4V5h-4z";
+
+        function loadSong(idx) {
+            currentIdx = idx;
+            audio.src = playlist[idx].src;
+            songTitle.innerText = playlist[idx].title;
+            audio.play();
+            video.play();
+            playIcon.querySelector('path').setAttribute('d', pausePath);
+        }
+
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                video.play();
+                playIcon.querySelector('path').setAttribute('d', pausePath);
+            } else {
+                audio.pause();
+                video.pause();
+                playIcon.querySelector('path').setAttribute('d', playPath);
+            }
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            currentIdx = (currentIdx - 1 + playlist.length) % playlist.length;
+            loadSong(currentIdx);
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            currentIdx = (currentIdx + 1) % playlist.length;
+            loadSong(currentIdx);
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            if (!isNaN(audio.duration)) {
+                const progress = (audio.currentTime / audio.duration) * 100;
+                scrubber.value = progress;
+                currentTimeEl.innerText = formatTime(audio.currentTime);
+                durationTimeEl.innerText = formatTime(audio.duration);
+            }
+        });
+
+        scrubber.addEventListener('input', () => {
+            const time = (scrubber.value / 100) * audio.duration;
+            audio.currentTime = time;
+        });
+
+        function formatTime(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = Math.floor(seconds % 60);
+            return `${min}:${sec < 10 ? '0' + sec : sec}`;
+        }
+
+        // --- 갤러리 이미지 로드 및 마우스 드래그 슬라이드 기능 ---
+        const gallery = document.getElementById('gallery-container');
+        for(let i=1; i<=11; i++) {
+            const div = document.createElement('div');
+            div.className = 'gallery-item';
+            const img = document.createElement('img');
+            img.src = `img/img${i}.jpeg`;
+            div.appendChild(img);
+            gallery.appendChild(div);
+        }
+
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        gallery.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - gallery.offsetLeft;
+            scrollLeft = gallery.scrollLeft;
+            gallery.style.scrollSnapType = 'none'; // 드래그 중에는 스냅 끄기
+        });
+        gallery.addEventListener('mouseleave', () => { isDown = false; gallery.style.scrollSnapType = 'x mandatory'; });
+        gallery.addEventListener('mouseup', () => { isDown = false; gallery.style.scrollSnapType = 'x mandatory'; });
+        gallery.addEventListener('mousemove', (e) => {
+            if(!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - gallery.offsetLeft;
+            const walk = (x - startX) * 2; // 스크롤 속도
+            gallery.scrollLeft = scrollLeft - walk;
+        });
+
+        // --- 기타 기능 ---
+        Kakao.init('0b3ba9d886b5c88bacf18f4664063603'); 
         function shareKakao() {
             Kakao.Share.sendDefault({
                 objectType: 'feed',
@@ -210,20 +358,9 @@
                     title: '김희태 & 조희연 결혼식에 초대합니다',
                     description: '2026년 10월 15일 목요일 낮 12시',
                     imageUrl: 'https://joriih.github.io/wedding/img/main.jpeg', 
-                    link: {
-                        mobileWebUrl: 'https://joriih.github.io/wedding/', 
-                        webUrl: 'https://joriih.github.io/wedding/'
-                    },
+                    link: { mobileWebUrl: 'https://joriih.github.io/wedding/', webUrl: 'https://joriih.github.io/wedding/' },
                 },
-                buttons: [
-                    {
-                        title: '청첩장 보기',
-                        link: {
-                            mobileWebUrl: 'https://joriih.github.io/wedding/',
-                            webUrl: 'https://joriih.github.io/wedding/',
-                        },
-                    },
-                ],
+                buttons: [{ title: '청첩장 보기', link: { mobileWebUrl: 'https://joriih.github.io/wedding/', webUrl: 'https://joriih.github.io/wedding/' } }],
             });
         }
 
@@ -234,20 +371,8 @@
                 setTimeout(() => cover.style.display = 'none', 800);
             }
         }
-        setTimeout(closeCover, 5000);
-
-        const container = document.getElementById('gallery-container');
-        if(container) {
-            for(let i=1; i<=11; i++) {
-                const img = document.createElement('img');
-                img.src = `img/img${i}.jpeg`;
-                container.appendChild(img);
-            }
-        }
-
         function openModal() { document.getElementById('contactModal').style.display = 'flex'; }
         function closeModal() { document.getElementById('contactModal').style.display = 'none'; }
-
         function copyText(text) {
             navigator.clipboard.writeText(text).then(() => {
                 const toast = document.getElementById("toast");
